@@ -19,6 +19,6 @@ Route::put('/eventos/{evento}', [EventoController::class, 'update']);
 // Eliminar un evento específico
 Route::delete('/eventos/{id}', [EventoController::class, 'destroy']);
 
-Route::get('/user', function (Request $request) {
+/*Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:api');
+})->middleware('auth:api');*/
