@@ -81,7 +81,24 @@ class EventoController extends Controller
      */
     public function show(Evento $evento)
     {
-        //
+        //Recuperar el recurso especificado
+        $evento = Evento::find($id);
+
+        // Si el recurso no se pudo recuperar, retornar un mensaje de error
+        if (!$evento) {
+            $respuesta = [
+                'message' => 'Evento no encontrado',
+                'status' => 404, // No encontrado
+            ];
+            return response()->json($respuesta, 404);
+        }
+
+        // Retornar el recurso recuperado
+        $respuesta = [
+            'evento' => $evento,
+            'status' => 200, // OK
+        ];
+        return response()->json($respuesta);
     }
 
     /**
@@ -89,7 +106,51 @@ class EventoController extends Controller
      */
     public function update(Request $request, Evento $evento)
     {
-        //
+        //Recuperar el recurso especificado
+        $evento = Evento::find($id);
+
+        // Si el recurso no se pudo recuperar, retornar un mensaje de error
+        if (!$evento) {
+            $respuesta = [
+                'message' => 'Evento no encontrado',
+                'status' => 404, // No encontrado
+            ];
+            return response()->json($respuesta, 404);
+        }
+
+        // Validar que la petición contenga todos los datos necesarios
+        $validator = Validator::make($request->all(), [
+            'titulo' => 'required',
+            'descripcion' => 'required',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date',
+            'ubicacion' => 'required',
+        ]);
+
+        // Si la petición no contiene todos los datos necesarios, retornar un mensaje de error
+        if ($validator->fails()) {
+            $respuesta = [
+                'message' => 'Datos faltantes',
+                'status' => 400, // Petición inválida
+            ];
+            return response()->json($respuesta, 400);
+        }
+
+        // Actualizar el recurso especificado con los datos de la petición
+        $evento->titulo = $request->titulo;
+        $evento->descripcion = $request->descripcion;
+        $evento->fecha_inicio = $request->fecha_inicio;
+        $evento->fecha_fin = $request->fecha_fin;
+        $evento->ubicacion = $request->ubicacion;
+        $evento->save();
+
+        // Retornar el recurso actualizado
+        $respuesta = [
+            'evento' => $evento,
+            'status' => 200, // OK
+        ];
+        return response()->json($respuesta);
+
     }
 
     /**
@@ -97,6 +158,27 @@ class EventoController extends Controller
      */
     public function destroy(Evento $evento)
     {
-        //
+        //Recuperar el recurso especificado
+        $evento = Evento::find($id);
+
+        // Si el recurso no se pudo recuperar, retornar un mensaje de error
+        if (!$evento) {
+            $respuesta = [
+                'message' => 'Evento no encontrado',
+                'status' => 404, // No encontrado
+            ];
+            return response()->json($respuesta, 404);
+        }
+
+        // Eliminar el recurso especificado
+        $evento->delete();
+
+        // Retornar un mensaje de éxito
+        $respuesta = [
+            'message' => 'Evento eliminado',
+            'status' => 200, // OK
+        ];
+        return response()->json($respuesta);
+
     }
 }
