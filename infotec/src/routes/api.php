@@ -15,7 +15,7 @@ Route::post('/eventos', [EventoController::class, 'store']);
 // Recuperar un evento específico
 Route::get('/eventos/{id}', [EventoController::class, 'show']);
 // Actualizar un evento específico
-Route::put('/eventos/{evento}', [EventoController::class, 'update']);
+Route::put('/eventos/{id}', [EventoController::class, 'update']);
 // Eliminar un evento específico
 Route::delete('/eventos/{id}', [EventoController::class, 'destroy']);
 

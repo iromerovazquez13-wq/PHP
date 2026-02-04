@@ -13,12 +13,17 @@ class EventoController extends Controller
      */
     public function index()
     {
+        // Recuperar todos los recursos
         $eventos = Evento::all();
- 
-        return response()->json([
+
+
+        // Retornar los recursos recuperados
+        $respuesta = [
             'eventos' => $eventos,
-            'status'  => 200,
-        ], 200);
+            'status' => 200,
+        ];
+        return response()->json($respuesta);
+
     }
  
     /**
@@ -26,42 +31,53 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
+        // Validar que la petición contenga todos los datos necesarios
         $validator = Validator::make($request->all(), [
-            'titulo'       => 'required|string|max:255',
-            'descripcion'  => 'required|string',
+            'titulo' => 'required',
+            'descripcion' => 'required',
             'fecha_inicio' => 'required|date',
-            'fecha_fin'    => 'required|date|after_or_equal:fecha_inicio',
-            'ubicacion'    => 'required|string|max:255',
+            'fecha_fin' => 'required|date',
+            'ubicacion' => 'required',
         ]);
+
  
-        // Si la petición no contiene todos los datos necesarios, retornar error
+        // Si la petición no contiene todos los datos necesarios, retornar un mensaje de error
         if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Datos inválidos',
-                'errors'  => $validator->errors(),
-                'status'  => 400,
-            ], 400);
+            $respuesta = [
+                'message' => 'Datos faltantes',
+                'status' => 400,
+            ];
+            return response()->json($respuesta, 400);
         }
+
  
+        // Crear un nuevo recurso con los datos de la petición
         $evento = Evento::create([
-            'titulo'       => $request->titulo,
-            'descripcion'  => $request->descripcion,
+            'titulo' => $request->titulo,
+            'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin'    => $request->fecha_fin,
-            'ubicacion'    => $request->ubicacion,
+            'fecha_fin' => $request->fecha_fin,
+            'ubicacion' => $request->ubicacion,
         ]);
+
  
+        // Si el recurso no se pudo crear, retornar un mensaje de error
         if (!$evento) {
-            return response()->json([
+            $respuesta = [
                 'message' => 'Error al crear el evento',
-                'status'  => 500,
-            ], 500);
+                'status' => 500,
+            ];
+            return response()->json($respuesta, 500);
         }
+
  
-        return response()->json([
+        // Retornar el recurso creado
+        $respuesta = [
             'evento' => $evento,
             'status' => 201,
-        ], 201);
+        ];
+        return response()->json($respuesta, 201);
+
     }
  
     /**
@@ -70,18 +86,21 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
- 
+
         if (!$evento) {
-            return response()->json([
+            $respuesta = [
                 'message' => 'Evento no encontrado',
-                'status'  => 404,
-            ], 404);
+                'status' => 404,
+            ];
+            return response()->json($respuesta, 404);
         }
- 
-        return response()->json([
+
+        $respuesta = [
             'evento' => $evento,
             'status' => 200,
-        ], 200);
+        ];
+        return response()->json($respuesta);
+
     }
  
     /**
@@ -90,42 +109,47 @@ class EventoController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($id);
- 
+
         if (!$evento) {
-            return response()->json([
+            $respuesta = [
                 'message' => 'Evento no encontrado',
-                'status'  => 404,
-            ], 404);
+                'status' => 404,
+            ];
+            return response()->json($respuesta, 404);
         }
- 
+
         $validator = Validator::make($request->all(), [
-            'titulo'       => 'required|string|max:255',
-            'descripcion'  => 'required|string',
+            'titulo' => 'required',
+            'descripcion' => 'required',
             'fecha_inicio' => 'required|date',
-            'fecha_fin'    => 'required|date|after_or_equal:fecha_inicio',
-            'ubicacion'    => 'required|string|max:255',
+            'fecha_fin' => 'required|date',
+            'ubicacion' => 'required',
         ]);
- 
+
         // Si la petición no contiene todos los datos necesarios, retornar error
         if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Datos inválidos',
-                'errors'  => $validator->errors(),
-                'status'  => 400,
-            ], 400);
+            $respuesta = [
+                'message' => 'Datos faltantes',
+                'status' => 400,
+        ];
+        return response()->json($respuesta, 400);
         }
+
  
-        $evento->titulo       = $request->titulo;
-        $evento->descripcion  = $request->descripcion;
+        $evento->titulo = $request->titulo;
+        $evento->descripcion = $request->descripcion;
         $evento->fecha_inicio = $request->fecha_inicio;
-        $evento->fecha_fin    = $request->fecha_fin;
-        $evento->ubicacion    = $request->ubicacion;
+        $evento->fecha_fin = $request->fecha_fin;
+        $evento->ubicacion = $request->ubicacion;
         $evento->save();
+
  
-        return response()->json([
+        $respuesta = [
             'evento' => $evento,
             'status' => 200,
-        ], 200);
+        ];
+        return response()->json($respuesta);
+
     }
  
     /**
@@ -134,20 +158,24 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
- 
+
         if (!$evento) {
-            return response()->json([
+            $respuesta = [
                 'message' => 'Evento no encontrado',
-                'status'  => 404,
-            ], 404);
+                'status' => 404,
+            ];
+            return response()->json($respuesta, 404);
         }
+
  
-        $evento->delete();
- 
-        return response()->json([
+       $evento->delete();
+
+        $respuesta = [
             'message' => 'Evento eliminado',
-            'status'  => 200,
-        ], 200);
+            'status' => 200,
+        ];
+        return response()->json($respuesta);
+
     }
 }
  

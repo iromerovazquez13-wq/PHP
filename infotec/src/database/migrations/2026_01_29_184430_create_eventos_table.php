@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('eventos');
+    }
+    
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -14,18 +22,14 @@ return new class extends Migration
         Schema::create('eventos', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->string('descripcion')->nullable();
+            $table->text('descripcion')->nullable();
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
             $table->string('ubicacion')->nullable();
             $table->timestamps();
         });
+
     }
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('eventos');
-    }
+
+    
 };
